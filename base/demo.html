@@ -1,0 +1,239 @@
+<!DOCTYPE html lang="es">
+<html>
+<head>
+	<title>Basic Html</title>
+	<meta name="description" content="Basic Html Template " />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<!-- Lang INI -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<!-- Lang END -->
+
+	<!-- Css INI -->
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<!-- Css END -->
+</head>
+<body>
+	<h1>BASIC HTML TEMPLATE</h1>
+	<section>
+		<h2>I.- LAYOUT</h2>
+		<p>This frame use MINICSS - You have bootstrap class ;).</p>
+		<p>minimal, responsive, style-agnostic CSS framework</p>
+		<p> <a class="button" href="https://minicss.org/docs" target="_blank" title="MiniCSS Frame">DOCS</a> </p>
+		<h3>Usefull</h3>
+		<ul>
+			<li>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<h4>Modal</h4>
+						<p>Show Basic Modal</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<label class="button" for="modal-control">Show modal</label>
+						<input type="checkbox" id="modal-control" class="modal">
+						<div role="dialog" aria-labelledby="dialog-title">
+							<div class="card">
+							<label for="modal-control" class="modal-close" ></label>
+							<h3 class="section" id="dialog-title">Modal</h3>
+							<p class="section">This is a modal dialog!</p>
+							</div>
+						</div>
+						<sub>* Inspect this div.</sub>
+
+					</div>
+				</div>		
+			</li>
+		</ul>
+	</section>
+	<hr>
+	<section>
+		<h2>II.- ANIMATION</h2>
+		<p>List of class you can use. Fuckanimation.</p>
+		<ul>
+			<li>
+				<h3>slideInFromLeft <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="slideInFromLeft">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>slideInFromRight <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="slideInFromRight">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>slideInFromTop <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="slideInFromTop">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>slideInFromBottom <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="slideInFromBottom">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>fadeIn <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="fadeIn">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>fadeOut <sub>CLASS</sub></h3>
+				<div><sub>Use showIntoViewport CLASS to show element only when this enter in screen</sub></div>
+				<div class="fadeOut">
+					<div  style="text-align: center;">
+						<img src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>pulse <sub>CLASS</sub></h3>
+				<p>+ animation-count_infinite <sub>CLASS</sub></p>
+				<div >
+					<div  style="text-align: center;">
+						<img class="pulse animation-count_infinite" src="img/dial-32x32.png">
+					</div>	
+				</div>
+			</li>
+			<li>
+				<h3>spinLeft <sub>CLASS</sub></h3>
+				<p>+ animation-count_infinite <sub>CLASS</sub></p>
+				<div  style="text-align: center;">
+					<img class="spinLeft animation-count_infinite" src="img/dial-32x32.png">
+				</div>	
+			</li>
+			<li>
+				<h3>spinRight <sub>CLASS</sub></h3>
+				<p>+ animation-count_infinite <sub>CLASS</sub></p>
+				<div  style="text-align: center;">
+					<img class="spinRight animation-count_infinite" src="img/dial-32x32.png">
+				</div>	
+			</li>
+			<li>
+				<h3>animation-count_X <sub>CLASS</sub></h3>
+				<p>Special Class use, X = Repeat Number</p>
+				<p>animation-count_3 = repeat animation 3 times.</p>
+				<p>animation-count_infinite = loop animation infinity.</p>
+			</li>
+			<li>
+				<h3>animation-duration_X <sub>CLASS</sub></h3>
+				<p>Special Class use, X = Duration of animation in seconds.</p>
+				<p>animation-duration_3 = Time animation 3 seconds.</p>
+			</li>
+
+			<li>
+				<h3>base_fadeIn(element) <sub>FUNCTION</sub></h3>
+				<p>element: Use QuerySelectorAll Logic ( .class, #id, div etc.. )</p>
+				<p>Add class .fadeIn to element. If has class .fadeOut be removed</p>
+			</li>
+			<li>
+				<h3>base_fadeOut(element) <sub>FUNCTION</sub></h3>
+				<p>element: Use QuerySelectorAll Logic ( .class, #id, div etc.. )</p>
+				<p>Add class .fadeOut to element. If has class .fadeIn whil be removed</p>
+			</li>
+		</ul>
+
+	</section>
+	<hr>
+	<section>
+		<h2>III.- Layout Helpers </h2>
+		<ul>
+			<li>
+				<h3>scaling <sub>CLASS</sub></h3>
+				<p>Special scaling element, by his parent.</p>
+				<div class="" style="width: 50%; margin-left: 25%; height: 300px; background-color: yellow; ">
+					<div  class="scaling" style="width: 500px; height: 500px; background-color: Red;">
+						<div style="">
+							<h1>Scaled Item</h1>
+							<p>This Content is scaled to fit his parent</p>
+							<img class="spinRight animation-count_infinite" src="img/dial-32x32.png">
+							<p>width:500px</p>
+							<p>height:500px</p>
+						</div>
+					</div>					
+				</div>
+
+			</li>
+
+			<li>
+				<h3>base_resizeToBoundingBox( parent_id, element_id ) <sub>FUNCTION</sub></h3>
+				<p>parent_id: ID of container o div .</p>
+				<p>element_id: ID of Img o div to resize.</p>
+				<button class="button" onClick='base_resizeToBoundingBox( "parent_id", "element_id" )'>APPLY base_resizeToBoundingBox( "parent_id", "element_id" )</button>
+				<div class="example" style="display:flex; justify-content: center;">
+					<div id="parent_id" style="transform: rotate(45deg); position: relative; width:100px; height: 200px; border-style: solid; border-width: 1px; ">
+						<div id="element_id" style="position: absolute; background-color: red; opacity: 0.5;">Element_Id</div>
+					</div>
+
+				</div>
+				
+			</li>
+		</ul>
+
+	</section>
+	<hr>
+	<section>
+		<h2>III.- JS Functions</h2>
+		<ul>
+			<li>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<h3>base_loadDataToId(data_url, id)</h3>
+						<p>data_url: External file ( html )</p>
+						<p>id: Target element id</p>
+						<sub># URL to the same domain.</sub>
+
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div id="base_loadDataToId_example" class="card">
+							Content Example
+						</div>
+						<a class="button" href="javascript:base_loadDataToId('data.txt', 'base_loadDataToId_example')">Load data.txt</a>
+					</div>
+				</div>
+
+			</li>
+			<li>
+				<h3>base_loadDataToFunction(data_url, custom_function)</h3>
+				<p>data_url: External file ( json, html, txt, etc. )</p>
+				<p>custom_function: Your custom function</p>
+			</li>
+			<li>
+				<h3>base_getJson(data_url, custom_function)</h3>
+				<p>data_url: External file ( json, html, txt, etc. )</p>
+				<p>custom_function: Your custom function</p>
+			</li>
+		</ul>
+	</section>
+	<hr>
+	<section>
+		
+	</section>
+	<div>
+		<div>
+			<p> Created by Jaime A. Zegpi B. </p>
+		</div>
+	</div>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+	//base_resizeToBoundingBox( "parent_id", "element_id" );
+</script>
+</body>
+</html>

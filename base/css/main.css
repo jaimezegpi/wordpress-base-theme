@@ -1,0 +1,96 @@
+/*DON'T TOUCH THIS FILE!!*/
+/*
+PLEASE USE
+general.css
+desktop.css
+tablet.css
+mobile.css
+*/
+/*smooth scroll ini*/
+html {
+  scroll-behavior: smooth;
+}
+/*smooth scroll end*/
+
+/*ScrollBar ini*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #888; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #f1f1f1; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+/*ScrollBar end*/
+
+/*layout ini*/
+
+.flex{
+  display: flex;
+}
+
+.flex-direction-column{
+  flex-direction: column;
+}
+
+.flex-direction-row{
+  flex-direction: row;
+}
+
+.flex-jc-start{
+  justify-content: flex-start;
+}
+
+.flex-jc-end{
+  justify-content: flex-end;
+}
+
+.flex-jc-center{
+  justify-content: center;
+}
+
+.flex-jc-space-around{
+  justify-content: space-around;
+}
+
+.flex-jc-space-between{
+  justify-content: space-between;
+}
+
+/*layout end*/
+
+/*Editor ini*/
+
+.text-align-left{ text-align: left; }
+.text-align-right{ text-align: right; }
+.text-align-center{ text-align: center; }
+.text-align-justify{ text-align: justify; }
+
+.uppercase{ text-transform: uppercase; }
+.lowercase{ text-transform: lowercase; }
+.capitalize{ text-transform: capitalize; }
+
+.drop-caps:first-letter{
+    display:block;
+    float:left;
+    margin:3px;
+    color:#f00;
+    font-size:300%;
+}
+
+sub{
+	font-size: 0.6rem;
+}
+/*Editor end*/
