@@ -54,6 +54,16 @@ function base_getJson(data_url, custom_function) {
 	*/
 }
 
-function base_onload(){
-	/*YOUR FUNCTIONS ON LOAD*/
+
+/*
+* Menu sticky
+*/
+var header = document.getElementById("navbar");
+var sticky = header.offsetTop;
+function base_stickyNavbar() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
 }

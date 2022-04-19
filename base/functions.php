@@ -1,27 +1,67 @@
 <?php
+define("HANDSHAKE","TAbUTLecuraMUNCeldIMplectfis");
+define("TIMEZONE","America/Santiago");
+add_action('wp_enqueue_scripts', 'base_implementScripts'); 
 
-/*HEADER*/
-add_theme_support( 'title-tag' );
-/*CSS INI*/
-wp_enqueue_style( 'main', get_template_directory_uri() . '/css/main.css',false,'1.1','all');
-wp_enqueue_style( 'fucknimation', get_template_directory_uri() . '/css/fucknimation.css',false,'1.1','all');
-/*MINICSS ini*/
-wp_enqueue_style( 'minicss', get_template_directory_uri() . '/css/mini-dark.min.css',false,'1.1','all');
-//wp_enqueue_style( 'main', get_template_directory_uri() . '/css/mini-default.min.css',false,'1.1','all');
-//wp_enqueue_style( 'main', get_template_directory_uri() . '/css/mini-nord.min.min.css',false,'1.1','all');
-/*MINICSS end*/
-wp_enqueue_style( 'general', get_template_directory_uri() . '/css/general.css',false,'1.1','all');
-wp_enqueue_style( 'desktop', get_template_directory_uri() . '/css/desktop.css',false,'1.1','all');
-wp_enqueue_style( 'tablet', get_template_directory_uri() . '/css/tablet.css',false,'1.1','all');
-wp_enqueue_style( 'mobile', get_template_directory_uri() . '/css/mobile.css',false,'1.1','all');
-/*CSS END*/
+/*Set time*/
+date_default_timezone_set(TIMEZONE);
 
-/*FOOTER*/
-/*JAVASCRIPT INI*/
-wp_enqueue_script( 'main', get_template_directory_uri() . '/js/main.js', array ( 'jquery' ), 1.1, true);
-wp_enqueue_script( 'fucknimation', get_template_directory_uri() . '/js/fucknimation.js', array ( 'jquery' ), 1.1, true);
-wp_enqueue_script( 'functions', get_template_directory_uri() . '/js/functions.js', array ( 'jquery' ), 1.1, true);
-/*JAVASCRIPT END*/
+function base_implementScripts(){
+	if ( !is_admin() ){
+
+		/* General User Site */
+
+		global $post;
+		$post_id = $post->ID."";
+		$version = "1.1";
+		/*HEADER*/
+		add_theme_support( 'title-tag' );
+		/*CSS INI*/
+		wp_enqueue_style( 'main-css', get_template_directory_uri() . '/css/main.css',false,$version,'all');
+		wp_enqueue_style( 'bxc_animation-css', get_template_directory_uri() . '/css/bxc_animation.css',false,$version,'all');
+		wp_enqueue_style( 'swiper-css', get_template_directory_uri() . '/css/swiper-bundle.min.css',false,$version,'all');
+		wp_enqueue_style( 'fancybox-css', get_template_directory_uri() . '/css/jquery.fancybox.min.css',false,$version,'all');
+		wp_enqueue_style( 'desktop-css', get_template_directory_uri() . '/css/desktop.css',false,$version,'all');
+		wp_enqueue_style( 'tablet-css', get_template_directory_uri() . '/css/tablet.css',false,$version,'all');
+		wp_enqueue_style( 'mobile-css', get_template_directory_uri() . '/css/mobile.css',false,$version,'all');
+		/*CSS END*/
+		/* HERE Insert Your custom CSS File */
+		/*wp_enqueue_style( 'your_libname-css', get_template_directory_uri() . '/css/your_libname.js', false, $version, 'all');*/
+		
+
+		/*FOOTER*/
+		/*JAVASCRIPT INI*/
+		wp_enqueue_script( 'swiper-js', get_template_directory_uri() . '/js/swiper-bundle.min.js', array ( 'jquery' ), $version, true);
+		wp_enqueue_script( 'fancybox-js', get_template_directory_uri() . '/js/jquery.fancybox.min.js', array ( 'jquery' ), $version, true);
+		wp_enqueue_script( 'bxc_animation-js', get_template_directory_uri() . '/js/bxc_animation.js', array ( 'jquery' ), $version, true);
+		wp_enqueue_script( 'functions-js', get_template_directory_uri() . '/js/functions.js', array ( 'jquery' ), $version, true);
+		wp_enqueue_script( 'main-js', get_template_directory_uri() . '/js/main.js', array ( 'jquery' ), $version, true);
+
+		wp_localize_script( 'functions-js', 'post_id', $post_id);
+		wp_localize_script( 'functions-js', 'post', json_encode($post) );
+		wp_localize_script( 'functions-js', 'site_url', get_site_url());
+		wp_localize_script( 'functions-js', 'template_url', get_template_directory_uri());
+
+		/*-------------*/
+		/* HERE Insert Your custom JS File */
+		/*wp_enqueue_script( 'your_libname-js', get_template_directory_uri() . '/js/your_libname.js', array ( 'jquery' ), $version, true);*/
+		/*JAVASCRIPT END*/
+
+	}else{
+
+		/* Admin User Dashboard */
+		/*HEADER*/
+		/*CSS INI*/
+		wp_enqueue_style( 'wordpress-dashboard-css', get_template_directory_uri() . '/css/wordpress-dashboard.css',false,$version,'all');
+		/*CSS END*/
+
+		/*FOOTER*/
+		/*JAVASCRIPT INI*/
+		wp_enqueue_script( 'wordpress-dashboard-js', get_template_directory_uri() . '/js/wordpress-dashboard.js', array ( 'jquery' ), 1.1, true);
+		/*JAVASCRIPT END*/
+	}
+
+}
 
 /*-------------------------------------------*/
 
@@ -29,42 +69,82 @@ wp_enqueue_script( 'functions', get_template_directory_uri() . '/js/functions.js
  * @return Menu array by name
  */
 function base_wpGetMenuArray($current_menu) {
-    $array_menu = wp_get_nav_menu_items($current_menu);
-    $menu = array();
-    foreach ($array_menu as $m) {
-        //var_dump($m);
-        if (empty($m->menu_item_parent)) {
-            $menu[$m->ID] = array();
-            $menu[$m->ID]['ID'] = $m->ID;
-            $menu[$m->ID]['object_id'] = $m->object_id;
-            $menu[$m->ID]['title'] = $m->title;
-            $menu[$m->ID]['url'] = $m->url;
-            $menu[$m->ID]['children'] = array();
-        }
-    }
-    $submenu = array();
-    foreach ($array_menu as $m) {
-        if ($m->menu_item_parent) {
-            $submenu[$m->ID] = array();
-            $submenu[$m->ID]['ID'] = $m->ID;
-            $submenu[$m->ID]['object_id'] = $m->object_id;
-            $submenu[$m->ID]['title'] = $m->title;
-            $submenu[$m->ID]['url'] = $m->url;
-            $menu[$m->menu_item_parent]['children'][$m->ID] = $submenu[$m->ID];
-        }
-    }
-    return $menu;
+	$array_menu = wp_get_nav_menu_items($current_menu);
+	$menu = array();
+	if ( !is_array($array_menu) ){ return false;}
+	foreach ($array_menu as $m) {
+		//var_dump($m);
+		if (empty($m->menu_item_parent)) {
+			$menu[$m->ID] = array();
+			$menu[$m->ID]['ID'] = $m->ID;
+			if ( isset($m->classes[0]) ){
+				$menu[$m->ID]['class'] = $m->classes[0];
+			}else{
+				$menu[$m->ID]['class'] = "";
+			}
+			$menu[$m->ID]['object_id'] = $m->object_id;
+			$menu[$m->ID]['title'] = $m->title;
+			$menu[$m->ID]['url'] = $m->url;
+			$menu[$m->ID]['children'] = array();
+		}
+	}
+	$submenu = array();
+	foreach ($array_menu as $m) {
+		if ($m->menu_item_parent) {
+			$submenu[$m->ID] = array();
+			$submenu[$m->ID]['ID'] = $m->ID;
+			if ( isset($m->classes[0]) ){
+				$menu[$m->ID]['class'] = $m->classes[0];
+			}else{
+				$menu[$m->ID]['class'] = "";
+			}
+			$submenu[$m->ID]['object_id'] = $m->object_id;
+			$submenu[$m->ID]['title'] = $m->title;
+			$submenu[$m->ID]['url'] = $m->url;
+			$menu[$m->menu_item_parent]['children'][$m->ID] = $submenu[$m->ID];
+		}
+	}
+	return $menu;
+}
+
+/*Get Recursive Menu
+* $menu_data = menu array from base_wpGetMenuArray function
+*/
+function base_getHtmlRecursiveMenu($menu_data, $menu_order=0){
+	if (!$menu_data){ return false; }
+	
+	$return = "";
+	$return .= '<div class="menu-items menu_id_'.$menu_order.'">';
+	if ($menu_data){
+		foreach ($menu_data as $subkey => $submenuvalue) {
+			if ( $submenuvalue["children"] ){
+				$return .= '<div onClick="jQuery(\'.submenu_id_'.$menu_order.'\').toggle();" ><a href="'.esc_attr($submenuvalue["url"]).'">'.$submenuvalue["title"].'</a></div>';
+				$return .= '<div class="submenu submenu_id_'.$menu_order.'" >';
+				$return .= base_getHtmlRecursiveMenu( $submenuvalue["children"], $menu_order );
+				$return .= '</div>';
+			}else{
+				if ($submenuvalue["title"]){
+					$return .= '<div><a href="'.esc_attr($submenuvalue["url"]).'">'.$submenuvalue["title"].'</a></div>';
+				}
+				
+			}
+			$menu_order++;
+		}
+	}
+	$return .= '</div>';
+
+	return $return;
 }
 
 /**
  * Register Menu in WP
  */
 function base_registerMenus() {
-    register_nav_menus(
-        array(
-            'header-menu' => __( 'Header Menu' ),
-        )
-    );
+	register_nav_menus(
+		array(
+			'header-menu' => __( 'Header Menu' ),
+		)
+	);
 }
 add_action( 'init', 'base_registerMenus' );
 
@@ -95,65 +175,120 @@ function base_theContent($content){
 	echo apply_filters( 'the_content', $content );
 }
 
-function base_custom_post_type( $name, $singular_name, $menu_name, $parent_item_colon, $all_items, $view_item, $add_new_item, $add_new, $edit_item, $update_item, $search_items, $not_found, $not_found_in_trash,$description) {
- 
+function base_custom_post_type( $name, $singular_name, $menu_name, $parent_item_colon, $all_items, $view_item, $add_new_item, $add_new, $edit_item, $update_item, $search_items, $not_found, $not_found_in_trash, $description, $menu_position, $menu_icon) {
+	if ( !$menu_position ){		$menu_position = 1;	}
+	if ( !is_numeric($menu_position) ){		$menu_position = 1;	}
+ if ( !$menu_icon ){ $menu_icon = 'dashicons-chart-pie';	}
+
 // Set UI labels for Custom Post Type
-    $labels = array(
-        'name'                => _x( $name, 'Post Type General Name', 'base' ),
-        'singular_name'       => _x( $singular_name, 'Post Type Singular Name', 'base' ),
-        'menu_name'           => __( $menu_name, 'base' ),
-        'parent_item_colon'   => __( $parent_item_colon, 'base' ),
-        'all_items'           => __( $all_items, 'base' ),
-        'view_item'           => __( $view_item, 'base' ),
-        'add_new_item'        => __( $add_new_item, 'base' ),
-        'add_new'             => __( $add_new, 'base' ),
-        'edit_item'           => __( $edit_item, 'base' ),
-        'update_item'         => __( $update_item, 'base' ),
-        'search_items'        => __( $search_items, 'base' ),
-        'not_found'           => __( $not_found, 'base' ),
-        'not_found_in_trash'  => __( $not_found_in_trash, 'base' )
-    );
-     
+	$labels = array(
+		'name'                => _x( $name, 'Post Type General Name', 'base' ),
+		'singular_name'       => _x( $singular_name, 'Post Type Singular Name', 'base' ),
+		'menu_name'           => __( $menu_name, 'base' ),
+		'parent_item_colon'   => __( $parent_item_colon, 'base' ),
+		'all_items'           => __( $all_items, 'base' ),
+		'view_item'           => __( $view_item, 'base' ),
+		'add_new_item'        => __( $add_new_item, 'base' ),
+		'add_new'             => __( $add_new, 'base' ),
+		'edit_item'           => __( $edit_item, 'base' ),
+		'update_item'         => __( $update_item, 'base' ),
+		'search_items'        => __( $search_items, 'base' ),
+		'not_found'           => __( $not_found, 'base' ),
+		'not_found_in_trash'  => __( $not_found_in_trash, 'base' )
+	);
+	 
 // Set other options for Custom Post Type
-     
-    $args = array(
-        'label'               => __( strtolower( $singular_name ) , 'base' ),
-        'description'         => __( $description, 'base' ),
-        'labels'              => $labels,
-        // Features this CPT supports in Post Editor
-        'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields','page-attributes' ),
-        // You can associate this CPT with a taxonomy or custom taxonomy. 
-        'taxonomies'          => array( 'genres' ),
-        /* A hierarchical CPT is like Pages and can have
-        * Parent and child items. A non-hierarchical CPT
-        * is like Posts.
-        */ 
-        'hierarchical'        => true,
-        'public'              => true,
-        'show_ui'             => true,
-        'show_in_menu'        => true,
-        'show_in_nav_menus'   => true,
-        'show_in_admin_bar'   => true,
-        'menu_position'       => 5,
-        'can_export'          => true,
-        'has_archive'         => true,
-        'exclude_from_search' => false,
-        'publicly_queryable'  => true,
-        'capability_type'     => 'page'
-    );
-     
-    // Registering your Custom Post Type
-    register_post_type( strtolower($menu_name), $args );
+	 
+	$args = array(
+		'label'               => __( strtolower( $singular_name ) , 'base' ),
+		'description'         => __( $description, 'base' ),
+		'labels'              => $labels,
+		// Features this CPT supports in Post Editor
+		'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields','page-attributes' ),
+		// You can associate this CPT with a taxonomy or custom taxonomy. 
+		'taxonomies'          => array( 'genres' ),
+		/* A hierarchical CPT is like Pages and can have
+		* Parent and child items. A non-hierarchical CPT
+		* is like Posts.
+		*/ 
+		'hierarchical'        => true,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => $menu_position,
+		'can_export'          => true,
+		'has_archive'         => true,
+		'exclude_from_search' => false,
+		'publicly_queryable'  => true,
+		'menu_icon'						=> $menu_icon,
+		'capability_type'     => 'page'
+	);
+	 
+	// Registering your Custom Post Type
+	register_post_type( strtolower($menu_name), $args );
  
 }
 
 function base_add_custom_post_type(){
 	/* 
 	Example
-	base_custom_post_type("Cliente", "Cliente", "Cliente", "Paren Cliente", "Todas los registros", "Ver Registro", "Agregar Cliente", "Agregar Cliente", "Editar Cliente", "Actualizar Cliente", "Buscar Cliente", "Cliente no encontrada", "Cliente no está en el basurero", "Bases de Ejemplo");
+base_custom_post_type(
+	$name,
+	$singular_name,
+	$menu_name,
+	$parent_item_colon,
+	$all_items,
+	$view_item,
+	$add_new_item,
+	$add_new,
+	$edit_item,
+	$update_item,
+	$search_items,
+	$not_found,
+	$not_found_in_trash,
+	$description,
+	$menu_position,
+	$menu_icon
+);
 	*/
 }
 add_action( 'init', 'base_add_custom_post_type', 0 );
+
+
+/* META BOXES O CUSTOM FIELDS */
+
+function base_register_meta_boxes() {
+	/*Exmaple*/
+	/*add_meta_box( 'mi-meta-box-id', __( 'Fields', 'tutorialeswp' ), 'base_mi_display_callback', 'post' );*/
+}
+add_action( 'add_meta_boxes', 'base_register_meta_boxes' );
+
+function base_mi_display_callback( $post ) {
+	$web1 = get_post_meta( $post->ID, 'web1', true );
+	$web2 = get_post_meta( $post->ID, 'web2', true );
+	wp_nonce_field( 'mi_meta_box_nonce', 'meta_box_nonce' );
+	echo '<p><label for="web1_label">Web de referencia 1</label> <input type="text" name="web1" id="web1" value="'. $web1 .'" /></p>';
+	echo '<p><label for="web2_label">Web de referencia 2</label> <input type="text" name="web2" id="web2" value="'. $web2 .'" /></p>';
+}
+
+function base_save_meta_box( $post_id ) {
+	// Comprobamos si es auto guardado
+	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	// Comprobamos el valor nonce creado en twp_mi_display_callback()
+	if( !isset( $_POST['meta_box_nonce'] ) || !wp_verify_nonce( $_POST['meta_box_nonce'], 'mi_meta_box_nonce' ) ) return;
+	// Comprobamos si el usuario actual no puede editar el post
+	if( !current_user_can( 'edit_post' ) ) return;
+	
+	
+	// Guardamos...
+	if( isset( $_POST['web1'] ) )
+	update_post_meta( $post_id, 'web1', $_POST['web1'] );
+	if( isset( $_POST['web2'] ) )
+	update_post_meta( $post_id, 'web2', $_POST['web2'] );
+}
+add_action( 'save_post', 'base_save_meta_box' );
 
 /* II.- PLUGINS */
 /* Contact Form 7 CF7 */
@@ -165,37 +300,37 @@ add_action('wpcf7_before_send_mail','base_dynamic_addcc');
  */
 function base_dynamic_addcc($WPCF7_ContactForm){
 		$form_id='00000'; /* ID de formulario */
-	    if ($form_id == $WPCF7_ContactForm->id()) {
-        $currentformInstance  = WPCF7_ContactForm::get_current();
-        $contactformsubmition = WPCF7_Submission::get_instance();
-        if ($contactformsubmition) {
-            $cc_email = array();
-            $data = $contactformsubmition->get_posted_data();
-            /* -------------- */
-            /*
-            $post_id = $data['ID']; <-- name of input field
-            */
+		if ($form_id == $WPCF7_ContactForm->id()) {
+		$currentformInstance  = WPCF7_ContactForm::get_current();
+		$contactformsubmition = WPCF7_Submission::get_instance();
+		if ($contactformsubmition) {
+			$cc_email = array();
+			$data = $contactformsubmition->get_posted_data();
+			/* -------------- */
+			/*
+			$post_id = $data['ID']; <-- name of input field
+			*/
 			$email1='ejemplo@ejemplo.com';
 			$email2='ejemplo2@ejemplo2.com';
 			if ($email1){array_push($cc_email, $email1);}
 			if ($email2){array_push($cc_email, $email2);}
 
 			$cclist = implode(', ',$cc_email);
-            if (empty($data)){ return; }
+			if (empty($data)){ return; }
 
-            $mail = $currentformInstance->prop('mail');
+			$mail = $currentformInstance->prop('mail');
 
-            if(!empty($cclist)){
-                $mail['additional_headers'] = "Cc: $cclist";
-            }
+			if(!empty($cclist)){
+				$mail['additional_headers'] = "Cc: $cclist";
+			}
 
-            $currentformInstance->set_properties(array(
-                "mail" => $mail
-            ));
+			$currentformInstance->set_properties(array(
+				"mail" => $mail
+			));
 
-            // return current cf7 instance
-            return $currentformInstance;
-        }
+			// return current cf7 instance
+			return $currentformInstance;
+		}
 	}
 	return true;
 }
@@ -209,16 +344,16 @@ add_action('wpcf7_before_send_mail','base_catch_beforme_send');
 function base_catch_beforme_send($WPCF7_ContactForm){
 		 $log_file='loginsert';
 		$form_id='00000'; /* ID de formulario */
-	    if ($form_id == $WPCF7_ContactForm->id()) {
-        $currentformInstance  = WPCF7_ContactForm::get_current();
-        $contactformsubmition = WPCF7_Submission::get_instance();
-        if ($contactformsubmition) {
-            $cc_email = array();
-            $data = $contactformsubmition->get_posted_data();
-            /* -------------- */
-            /*
-            $post_id = $data['ID']; <-- name of input field
-            */
+		if ($form_id == $WPCF7_ContactForm->id()) {
+		$currentformInstance  = WPCF7_ContactForm::get_current();
+		$contactformsubmition = WPCF7_Submission::get_instance();
+		if ($contactformsubmition) {
+			$cc_email = array();
+			$data = $contactformsubmition->get_posted_data();
+			/* -------------- */
+			/*
+			$post_id = $data['ID']; <-- name of input field
+			*/
 			try {
 
 				global $wpdb;
@@ -242,8 +377,8 @@ function base_catch_beforme_send($WPCF7_ContactForm){
 				fclose($out);
 				
 			}
-            return $currentformInstance;
-        }
+			return $currentformInstance;
+		}
 	}
 	return true;
 }
@@ -259,18 +394,18 @@ Retorna el valor de la UF
  */
 function base_getUF(){
   if (!file_exists('uf')) {
-      mkdir("uf/", 0777);
+	  mkdir("uf/", 0777);
   }
   if ( file_exists('uf/uf.txt') ){
-    $fichero = file_get_contents('uf/uf.txt', true);
-    $fichero_a = explode("|", $fichero);
-    if ($fichero_a[0]==DATE("Y-m-d")."txt"){
+	$fichero = file_get_contents('uf/uf.txt', true);
+	$fichero_a = explode("|", $fichero);
+	if ($fichero_a[0]==DATE("Y-m-d")."txt"){
 		return $fichero_a[1];
-    }else{
-    	return base_contactUFSource();
-    }    
+	}else{
+		return base_contactUFSource();
+	}    
   }else{
-    return base_contactUFSource();
+	return base_contactUFSource();
   }
 }
 
@@ -278,22 +413,141 @@ function base_getUF(){
  * @return [string UF]
  */
 function base_contactUFSource(){
-    $apiUrl = 'https://mindicador.cl/api';
-    //Es necesario tener habilitada la directiva allow_url_fopen para usar file_get_contents
-    if ( ini_get('allow_url_fopen') ) {
-        $json = file_get_contents($apiUrl);
-    } else {
-        //De otra forma utilizamos cURL
-        $curl = curl_init($apiUrl);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $json = curl_exec($curl);
-        curl_close($curl);
-    }
-    $dailyIndicators = json_decode($json);
-    $uf = $dailyIndicators->uf->valor;
-    $str = 'uf/uf.txt';
-    $out = fopen($str, "w");
-    fwrite($out, $uf);
-    fclose($out);
-    return $uf;
+	$apiUrl = 'https://mindicador.cl/api';
+	//Es necesario tener habilitada la directiva allow_url_fopen para usar file_get_contents
+	if ( ini_get('allow_url_fopen') ) {
+		$json = file_get_contents($apiUrl);
+	} else {
+		//De otra forma utilizamos cURL
+		$curl = curl_init($apiUrl);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		$json = curl_exec($curl);
+		curl_close($curl);
+	}
+	$dailyIndicators = json_decode($json);
+	$uf = $dailyIndicators->uf->valor;
+	$str = 'uf/uf.txt';
+	$out = fopen($str, "w");
+	fwrite($out, $uf);
+	fclose($out);
+	return $uf;
 }
+
+/**
+*  Add to the admin_init hook of your theme functions.php file 
+*/
+function base_category_tag_settings() {  
+	// Add tag metabox to page
+	register_taxonomy_for_object_type('post_tag', 'page'); 
+	// Add category metabox to page
+	register_taxonomy_for_object_type('category', 'page');  
+}
+// Add to the admin_init hook of your theme functions.php file 
+add_action( 'init', 'base_category_tag_settings' );
+
+/**
+ * $role
+ */
+function base_role_exists( $role ) {
+
+	if( ! empty( $role ) ) {
+		return $GLOBALS['wp_roles']->is_role( $role );
+	}
+
+	return false;
+}
+
+/**
+ *  @$origien_role
+ *  @$clone_name
+ *  @$clone_show_name
+ * @return 
+ */
+function base_clone_role( $origin_role, $clone_name, $clone_show_name ) {
+	if (!$origin_role || !$clone_name || !$clone_show_name){ return false; }
+	if ( !base_role_exists( $role ) ){ return false; }
+	strtolower($clone_name);
+	$clone_name = base_clean_string_onlyLetters( $clone_name );
+	add_role( $clone_name, $clone_show_name, get_role( $origin_role )->capabilities );
+}
+
+
+/**
+ * @s
+ * @return [string]
+ */
+function base_clean_string_onlyLetters( $s ){
+	if ( !$s ){
+		return false;
+	}elseif ( !is_string($s) ) {
+		return false;
+	}
+	str_replace(" ", "_", $s);
+	$result = preg_replace("/[^a-zA-Z0-9]+/", "", $s);
+	return $result;
+}
+
+
+/* SECURITY ---------------------------------------------------------*/
+function base_removeWordpressVersion() {
+return '';
+}
+add_filter('the_generator', 'base_removeWordpressVersion');
+
+
+/* THEME ---------------------------------------------------------*/
+
+/**
+ * Change login form
+ */
+function base_theme_loginForm() { ?>
+	<style type="text/css">
+
+	body.login.login-action-login{
+		background-image: url(<?php echo get_template_directory_uri(); ?>/img/login-background.jpg);
+		background-size: cover;
+		background-position: center;
+	}
+
+	#login h1 a, .login h1 a {
+		background-image: url(<?php echo get_template_directory_uri(); ?>/img/padlock.png);
+		height:100px;
+		width:100px;
+		background-size: 100px 100px;
+		background-repeat: no-repeat;
+		padding-bottom: 30px;
+	}
+	</style>
+<?php
+}
+add_action( 'login_enqueue_scripts', 'base_theme_loginForm' );
+
+
+
+/**
+ * Hide Admin bar.
+ */
+function base_theme_hideAdminBar(){ return false; }
+add_filter( 'show_admin_bar', 'base_theme_hideAdminBar' );
+
+/*
+
+Email sender
+
+// Función para cambiar el remitente. Cambiamos "admin@example.com" por nuestro email
+function wpb_sender_email( $original_email_address ) {
+	return 'admin@example.com';
+} 
+
+// Función para cambiar el nombre del remitente. Cambiamos "Admin Admin" por el nombre que deseemos
+function wpb_sender_name( $original_email_from ) {
+	return 'Admin Admin';
+}
+
+// Hookeamos las funciones 
+add_filter( 'wp_mail_from', 'wpb_sender_email' );
+add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
+*/
+/*---------------------------------------------------------*/
+
+
