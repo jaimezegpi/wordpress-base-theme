@@ -1,0 +1,22 @@
+/*WP_MENU*/
+
+/*wp_icon*/
+#adminmenu .current div.wp-menu-image:before, #adminmenu .wp-has-current-submenu div.wp-menu-image:before, #adminmenu a.current:hover div.wp-menu-image:before, #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before,#adminmenu div.wp-menu-image:before{
+	color: #1c1c1c;
+}
+
+/*Active Menu*/
+#adminmenuback,#adminmenuwrap,#adminmenu{
+	background-color: #ccc;
+}
+
+/*All menu font color*/
+#adminmenu li a{
+	color: #1c1c1c;
+}
+
+/*SubMenu background*/
+#adminmenu .wp-has-current-submenu .wp-menu-name{
+	background-color: #fff;
+	color: #1c1c1c;
+}
