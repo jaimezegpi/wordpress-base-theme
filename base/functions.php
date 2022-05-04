@@ -1,11 +1,23 @@
 <?php
 define("HANDSHAKE","TAbUTLecuraMUNCeldIMplectfis");
 define("TIMEZONE","America/Santiago");
-add_action('wp_enqueue_scripts', 'base_implementScripts'); 
+define("BASE_DEBUG",true);
+/* install theme exceute only one time */
+if ( !file_exists(__DIR__.'/base_setup.php') ){
+	base_showDebugLine("Theme not instaled. Proceed to do..");
+	base_showDebugLine("1.- Creating CRUD ( Create, Read, Update, Delete ) Pages..");
+	base_create_page("crud","page for actions of theme" );
+	base_showDebugLine("2.- Include ".__DIR__."/Install.php");
+	if ( file_exists(__DIR__.'/install.php') ){
+		include( "install.php" );
+	}else{
+		base_showDebugLine("File not exist install.php");
+	}
+}
 
 /*Set time*/
 date_default_timezone_set(TIMEZONE);
-
+add_action('wp_enqueue_scripts', 'base_implementScripts'); 
 function base_implementScripts(){
 	if ( !is_admin() ){
 
@@ -261,11 +273,11 @@ add_action( 'init', 'base_add_custom_post_type', 0 );
 
 function base_register_meta_boxes() {
 	/*Exmaple*/
-	/*add_meta_box( 'mi-meta-box-id', __( 'Fields', 'tutorialeswp' ), 'base_mi_display_callback', 'post' );*/
+	/*add_meta_box( 'mi-meta-box-id', __( 'Fields', 'tutorialeswp' ), 'base_display_callback', 'post' );*/
 }
 add_action( 'add_meta_boxes', 'base_register_meta_boxes' );
 
-function base_mi_display_callback( $post ) {
+function base_display_callback( $post ) {
 	$web1 = get_post_meta( $post->ID, 'web1', true );
 	$web2 = get_post_meta( $post->ID, 'web2', true );
 	wp_nonce_field( 'mi_meta_box_nonce', 'meta_box_nonce' );
@@ -551,3 +563,44 @@ add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
 /*---------------------------------------------------------*/
 
 
+function base_create_page($title_of_the_page,$content,$parent_id = NULL ) {
+    $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
+    if( ! empty( $objPage ) )
+    {
+        /*echo "Page already exists:" . $title_of_the_page . "<br/>";*/
+        return $objPage->ID;
+    }
+    
+    $page_id = wp_insert_post(
+            array(
+            'comment_status' => 'close',
+            'ping_status'    => 'close',
+            'post_author'    => 1,
+            'post_title'     => ucwords($title_of_the_page),
+            'post_name'      => strtolower(str_replace(' ', '-', trim($title_of_the_page))),
+            'post_status'    => 'publish',
+            'post_content'   => $content,
+            'post_type'      => 'page',
+            'post_parent'    =>  $parent_id //'id_of_the_parent_page_if_it_available'
+            )
+        );
+    /*echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";*/
+    return $page_id;
+}
+
+//base_create_page("action","page for actions of theme" );
+//base_create_page("create","child of actions for create posts" );
+
+
+/* Error Display on DEBUG */
+function base_showDebugLine($line,$type=""){
+	if ( !BASE_DEBUG ){ return false;	}
+	$line = sanitize_text_field($line);
+	if ($type=="pre"){
+		echo '<div class="base-debug-line"><pre>';
+		var_dump($line);
+		echo '</pre></div>';
+	}else{
+		echo '<div class="base-debug-line">'.$line.'</div>';
+	}
+}
