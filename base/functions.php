@@ -7,7 +7,7 @@ if ( !file_exists(__DIR__.'/base_setup.php') ){
 	base_showDebugLine("Theme not instaled. Proceed to do..");
 	base_showDebugLine("1.- Creating CRUD ( Create, Read, Update, Delete ) Pages..");
 	base_create_page("crud","page for actions of theme" );
-	base_showDebugLine("2.- Include ".__DIR__."/Install.php");
+	base_showDebugLine("2.- Include ".__DIR__."/install.php");
 	if ( file_exists(__DIR__.'/install.php') ){
 		include( "install.php" );
 	}else{
@@ -81,73 +81,90 @@ function base_implementScripts(){
  * @return Menu array by name
  */
 function base_wpGetMenuArray($current_menu) {
-	$array_menu = wp_get_nav_menu_items($current_menu);
-	$menu = array();
-	if ( !is_array($array_menu) ){ return false;}
-	foreach ($array_menu as $m) {
-		//var_dump($m);
-		if (empty($m->menu_item_parent)) {
-			$menu[$m->ID] = array();
-			$menu[$m->ID]['ID'] = $m->ID;
-			if ( isset($m->classes[0]) ){
-				$menu[$m->ID]['class'] = $m->classes[0];
-			}else{
-				$menu[$m->ID]['class'] = "";
-			}
-			$menu[$m->ID]['object_id'] = $m->object_id;
-			$menu[$m->ID]['title'] = $m->title;
-			$menu[$m->ID]['url'] = $m->url;
-			$menu[$m->ID]['children'] = array();
-		}
-	}
-	$submenu = array();
-	foreach ($array_menu as $m) {
-		if ($m->menu_item_parent) {
-			$submenu[$m->ID] = array();
-			$submenu[$m->ID]['ID'] = $m->ID;
-			if ( isset($m->classes[0]) ){
-				$menu[$m->ID]['class'] = $m->classes[0];
-			}else{
-				$menu[$m->ID]['class'] = "";
-			}
-			$submenu[$m->ID]['object_id'] = $m->object_id;
-			$submenu[$m->ID]['title'] = $m->title;
-			$submenu[$m->ID]['url'] = $m->url;
-			$menu[$m->menu_item_parent]['children'][$m->ID] = $submenu[$m->ID];
-		}
-	}
-	return $menu;
+	return wp_nav_menu( array(
+		'menu'   => $current_menu,
+		'walker' => new base_WPDocs_Walker_Nav_Menu()
+	) );
 }
 
-/*Get Recursive Menu
-* $menu_data = menu array from base_wpGetMenuArray function
-*/
-function base_getHtmlRecursiveMenu($menu_data, $menu_order=0){
-	if (!$menu_data){ return false; }
-	
-	$return = "";
-	$return .= '<div class="menu-items menu_id_'.$menu_order.'">';
-	if ($menu_data){
-		foreach ($menu_data as $subkey => $submenuvalue) {
-			if ( $submenuvalue["children"] ){
-				$return .= '<div onClick="jQuery(\'.submenu_id_'.$menu_order.'\').toggle();" ><a href="'.esc_attr($submenuvalue["url"]).'">'.$submenuvalue["title"].'</a></div>';
-				$return .= '<div class="submenu submenu_id_'.$menu_order.'" >';
-				$return .= base_getHtmlRecursiveMenu( $submenuvalue["children"], $menu_order );
-				$return .= '</div>';
-			}else{
-				if ($submenuvalue["title"]){
-					$return .= '<div><a href="'.esc_attr($submenuvalue["url"]).'">'.$submenuvalue["title"].'</a></div>';
-				}
-				
-			}
-			$menu_order++;
-		}
+
+class base_WPDocs_Walker_Nav_Menu extends Walker_Nav_Menu {
+
+	/**
+	 * Starts the list before the elements are added.
+	 *
+	 * Adds classes to the unordered list sub-menus.
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param int    $depth  Depth of menu item. Used for padding.
+	 * @param array  $args   An array of arguments. @see wp_nav_menu()
+	 */
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		// Depth-dependent classes.
+		$indent = ( $depth > 0  ? str_repeat( "\t", $depth ) : '' ); // code indent
+		$display_depth = ( $depth + 1); // because it counts the first submenu as 0
+		$classes = array(
+			'sub-menu',
+			( $display_depth % 2  ? 'menu-odd' : 'menu-even' ),
+			( $display_depth >=2 ? 'sub-sub-menu' : '' ),
+			'menu-depth-' . $display_depth
+		);
+		$class_names = implode( ' ', $classes );
+
+		// Build HTML for output.
+		$output .= "\n" . $indent . '<ul class="' . $class_names . '">' . "\n";
 	}
-	$return .= '</div>';
 
-	return $return;
+	/**
+	 * Start the element output.
+	 *
+	 * Adds main/sub-classes to the list items and links.
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param object $item   Menu item data object.
+	 * @param int    $depth  Depth of menu item. Used for padding.
+	 * @param array  $args   An array of arguments. @see wp_nav_menu()
+	 * @param int    $id     Current item ID.
+	 */
+	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+		global $wp_query;
+		$indent = ( $depth > 0 ? str_repeat( "\t", $depth ) : '' ); // code indent
+
+		// Depth-dependent classes.
+		$depth_classes = array(
+			( $depth == 0 ? 'main-menu-item' : 'sub-menu-item' ),
+			( $depth >=2 ? 'sub-sub-menu-item' : '' ),
+			( $depth % 2 ? 'menu-item-odd' : 'menu-item-even' ),
+			'menu-item-depth-' . $depth
+		);
+		$depth_class_names = esc_attr( implode( ' ', $depth_classes ) );
+
+		// Passed classes.
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+		$class_names = esc_attr( implode( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) ) );
+
+		// Build HTML.
+		$output .= $indent . '<li id="nav-menu-item-'. $item->ID . '" class="' . $depth_class_names . ' ' . $class_names . '">';
+
+		// Link attributes.
+		$attributes  = ! empty( $item->attr_title ) ? ' title="'  . esc_attr( $item->attr_title ) .'"' : '';
+		$attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+		$attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+		$attributes .= ! empty( $item->url )        ? ' href="'   . esc_attr( $item->url        ) .'"' : '';
+		$attributes .= ' class="menu-link ' . ( $depth > 0 ? 'sub-menu-link' : 'main-menu-link' ) . '"';
+
+		// Build HTML output and pass through the proper filter.
+		$item_output = sprintf( '%1$s<a%2$s>%3$s%4$s%5$s</a>%6$s',
+			$args->before,
+			$attributes,
+			$args->link_before,
+			apply_filters( 'the_title', $item->title, $item->ID ),
+			$args->link_after,
+			$args->after
+		);
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+	}
 }
-
 /**
  * Register Menu in WP
  */
