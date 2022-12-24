@@ -1,7 +1,11 @@
 <?php get_header(); ?>
 
 <section id="random-seccion" class="target-top-margin">
-	
+	<?php
+
+	$manu = base_wpGetMenuArray('Menu');
+	var_dump($manu);
+	?>
 	<div class="content">
 		<h1>Template Base</h1>
 		<p>Esta es una base sencilla para trabajar.</p>
