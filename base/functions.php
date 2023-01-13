@@ -1,8 +1,6 @@
 <?php
-define("HANDSHAKE","TAbUTLecuraMUNCeldIMplectfis");
-define("TIMEZONE","America/Santiago");
 define("BASE_DEBUG",true);
-/* install theme exceute only one time */
+/* install theme execute only one time */
 if ( !file_exists(__DIR__.'/base_setup.php') ){
 	base_showDebugLine("Theme not instaled. Proceed to do..");
 	base_showDebugLine("1.- Creating CRUD ( Create, Read, Update, Delete ) Pages..");
@@ -15,8 +13,7 @@ if ( !file_exists(__DIR__.'/base_setup.php') ){
 	}
 }
 
-/*Set time*/
-date_default_timezone_set(TIMEZONE);
+
 add_action('wp_enqueue_scripts', 'base_implementScripts'); 
 function base_implementScripts(){
 	if ( !is_admin() ){
@@ -266,23 +263,24 @@ function base_custom_post_type( $name, $singular_name, $menu_name, $parent_item_
 function base_add_custom_post_type(){
 	/* 
 	Example
-base_custom_post_type(
-	$name,
-	$singular_name,
-	$menu_name,
-	$parent_item_colon,
-	$all_items,
-	$view_item,
-	$add_new_item,
-	$add_new,
-	$edit_item,
-	$update_item,
-	$search_items,
-	$not_found,
-	$not_found_in_trash,
-	$description,
-	$menu_position,
-	$menu_icon
+	$name="service";
+	$singular_name="service";
+	$menu_name="service";
+	$parent_item_colon="_";
+	$all_items="all";
+	$view_item="view";
+	$add_new_item="new service";
+	$add_new="new";
+	$edit_item="edit";
+	$update_item="update";
+	$search_items="search";
+	$not_found="not found";
+	$not_found_in_trash="not found in trash";
+	$description="service description";
+	$menu_position="1";
+	$menu_icon="dashicons-admin-post";
+	// you can find icons here : https://developer.wordpress.org/resource/dashicons
+	base_custom_post_type($name,$singular_name,$menu_name,$parent_item_colon,$all_items,$view_item,$add_new_item,$add_new,$edit_item,$update_item,$search_items,$not_found,$not_found_in_trash,$description,$menu_position,$menu_icon
 );
 	*/
 }
@@ -368,12 +366,12 @@ function base_dynamic_addcc($WPCF7_ContactForm){
 }
 
 // 2. - Control de envio de formulario , Guardo en la BD
-add_action('wpcf7_before_send_mail','base_catch_beforme_send');
+add_action('wpcf7_before_send_mail','base_catch_before_send');
 /**
  * @param  [cftform]
  * @return [boolean]
  */
-function base_catch_beforme_send($WPCF7_ContactForm){
+function base_catch_before_send($WPCF7_ContactForm){
 		$log_file='loginsert';
 		$form_id='00000'; /* ID de formulario */
 		if ($form_id == $WPCF7_ContactForm->id()) {
@@ -425,6 +423,8 @@ Retorna el valor de la UF
  * @return [write UF in File]
  */
 function base_getUF(){
+	return "This function is deprecated";
+	/*
   if (!file_exists('uf')) {
 	  mkdir("uf/", 0777);
   }
@@ -439,12 +439,14 @@ function base_getUF(){
   }else{
 	return base_contactUFSource();
   }
+  */
 }
 
 /**
  * @return [string UF]
  */
 function base_contactUFSource(){
+	/*
 	$apiUrl = 'https://mindicador.cl/api';
 	//Es necesario tener habilitada la directiva allow_url_fopen para usar file_get_contents
 	if ( ini_get('allow_url_fopen') ) {
@@ -463,6 +465,7 @@ function base_contactUFSource(){
 	fwrite($out, $uf);
 	fclose($out);
 	return $uf;
+	*/
 }
 
 /**
