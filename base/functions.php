@@ -15,11 +15,13 @@ if ( !file_exists(__DIR__.'/base_setup.php') ){
 
 
 add_action('wp_enqueue_scripts', 'base_implementScripts'); 
+/**
+ * @return Bolean
+ */
 function base_implementScripts(){
 	if ( !is_admin() ){
 
 		/* General User Site */
-
 		global $post;
 		$post_id = $post->ID."";
 		$version = "1.1";
@@ -69,6 +71,7 @@ function base_implementScripts(){
 		wp_enqueue_script( 'wordpress-dashboard-js', get_template_directory_uri() . '/js/wordpress-dashboard.js', array ( 'jquery' ), 1.1, true);
 		/*JAVASCRIPT END*/
 	}
+	return true;
 
 }
 
@@ -204,6 +207,25 @@ function base_theContent($content){
 	echo apply_filters( 'the_content', $content );
 }
 
+/**
+ * @name
+ * @singular_name 
+ * @menu_name 
+ * @parent_item_colon 
+ * @all_items 
+ * @view_item 
+ * @add_new_item 
+ * @add_new 
+ * @edit_item 
+ * @update_item 
+ * @search_items 
+ * @not_found 
+ * @not_found_in_trash 
+ * @description 
+ * @menu_position 
+ * @menu_icon 
+ * @return [true]
+ */
 function base_custom_post_type( $name, $singular_name, $menu_name, $parent_item_colon, $all_items, $view_item, $add_new_item, $add_new, $edit_item, $update_item, $search_items, $not_found, $not_found_in_trash, $description, $menu_position, $menu_icon) {
 	if ( !$menu_position ){		$menu_position = 1;	}
 	if ( !is_numeric($menu_position) ){		$menu_position = 1;	}
@@ -257,6 +279,7 @@ function base_custom_post_type( $name, $singular_name, $menu_name, $parent_item_
 	 
 	// Registering your Custom Post Type
 	register_post_type( strtolower($menu_name), $args );
+	return true;
  
 }
 
@@ -627,3 +650,71 @@ function base_showDebugLine($line,$type=""){
 		echo '<div class="base-debug-line">'.$line.'</div>';
 	}
 }
+
+
+// Allow SVG
+/*
+add_filter( 'wp_check_filetype_and_ext', function($data, $file, $filename, $mimes) {
+
+  global $wp_version;
+  if ( $wp_version !== '4.7.1' ) {
+     return $data;
+  }
+
+  $filetype = wp_check_filetype( $filename, $mimes );
+
+  return [
+      'ext'             => $filetype['ext'],
+      'type'            => $filetype['type'],
+      'proper_filename' => $data['proper_filename']
+  ];
+
+}, 10, 4 );
+*/
+/**
+ * @param  Tipos de archivo Array
+ * @return Tipos actualizados
+ */
+
+/*
+function base_mime_types( $mimes ){
+  $mimes['svg'] = 'image/svg+xml';
+  return $mimes;
+}
+add_filter( 'upload_mimes', 'base_mime_types' );
+*/
+/**
+ * @return none
+ */
+/*
+function fix_svg() {
+  echo '<style type="text/css">
+        .attachment-266x266, .thumbnail img {
+             width: 100% !important;
+             height: auto !important;
+        }
+        </style>';
+}
+add_action( 'admin_head', 'fix_svg' );
+*/
+
+// Ad column to dashboard
+/*
+add_filter( 'manage_proyecto_posts_columns', 'base_custom_edit_proyecto_columns' );
+function base_custom_edit_proyecto_columns($columns) {
+    $columns['estado'] = __('Estado','estado');
+    return $columns;
+}
+
+add_action( 'manage_proyecto_posts_custom_column' , 'base_custom_book_column', 10, 2 );
+function base_custom_book_column( $column, $post_id ) {
+    switch ( $column ) {
+
+        case 'estado' :
+            $terms = get_the_term_list( $post_id , 'estado' , '' , ',' , '' );
+            //echo get_post_meta($post_id,"p_id")[0];
+            echo get_field("proyecto_estado",$post_id);
+            break;
+    }
+}
+*/
